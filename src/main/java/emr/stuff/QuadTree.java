@@ -55,7 +55,7 @@ public class QuadTree<T extends Bounded>
 		nodes[ 3 ] = new QuadTree<T>( nextlevel , new Bounds( new Location( topleft.X + newwidth , topleft.Y + newheight ) , newwidth , newheight ) );
 	}
 	
-	private int getIndex( T item )
+	private int getIndex( Bounded item )
 	{
 		int index = -1;
 		int hmiddle = bounds.getTopLeft().X + ( (int) ( bounds.getWidth() / 2.0 ) );
@@ -146,7 +146,7 @@ public class QuadTree<T extends Bounded>
 		return returnlist;
 	}
 	
-	public List<Bounds> getAllBoundsWithLeaves( List<Bounds> list )
+	public List<Bounded> getAllBoundsWithLeaves( List<Bounded> list )
 	{
 		if( nodes[ 0 ] != null )
 		{
@@ -180,7 +180,7 @@ public class QuadTree<T extends Bounded>
 		return !leaves.isEmpty();
 	}
 	
-	public Bounds getBounds()
+	public Bounded getBounds()
 	{
 		return bounds;
 	}

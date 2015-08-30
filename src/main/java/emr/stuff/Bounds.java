@@ -1,14 +1,14 @@
 package emr.stuff;
 
-import java.awt.Rectangle;
+import java.awt.geom.Rectangle2D;
 
 public class Bounds implements Bounded
 {
 	private Location topleft;
-	private int width;
-	private int height;
+	private double width;
+	private double height;
 	
-	public Bounds( Location loc , int w , int h )
+	public Bounds( Location loc , double w , double h )
 	{
 		topleft = loc;
 		width = w;
@@ -22,22 +22,22 @@ public class Bounds implements Bounded
 	}
 	
 	@Override
-	public int getWidth()
+	public double getWidth()
 	{
 		return width;
 	}
 	
 	@Override
-	public int getHeight()
+	public double getHeight()
 	{
 		return height;
 	}
 	
-	public boolean intersects( Bounds other )
+	@Override
+	public boolean intersects( Bounded other )
 	{
-		Rectangle a = new Rectangle( topleft.X , topleft.Y , width , height );
-		Rectangle b = new Rectangle( other.getTopLeft().X , other.getTopLeft().Y , other.getWidth() , other.getHeight() );
-		return a.intersects( b );
+		return new Rectangle2D.Double( topleft.X , topleft.Y , width , height )
+			.intersects( other.getTopLeft().X , other.getTopLeft().Y , other.getWidth() , other.getHeight() );
 	}
 	
 	@Override

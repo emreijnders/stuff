@@ -58,15 +58,29 @@ public class Location implements Comparable<Location>, Bounded
 	}
 	
 	@Override
-	public int getWidth()
+	public double getWidth()
 	{
 		return 1;
 	}
 	
 	@Override
-	public int getHeight()
+	public double getHeight()
 	{
 		return 1;
+	}
+	
+	@Override
+	public boolean intersects( Bounded other )
+	{
+		boolean answer = false;
+		if( X >= other.getTopLeft().X 
+			&& X < other.getTopLeft().X + other.getWidth() 
+			&& Y >= other.getTopLeft().Y
+			&& Y < other.getTopLeft().Y + other.getHeight() )
+		{
+			answer = true;
+		}
+		return answer;
 	}
 	
 	@Override
