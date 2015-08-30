@@ -125,7 +125,12 @@ public class QuadTree<T extends Bounded>
 		}
 	}
 	
-	public List<T> retrieve( List<T> returnlist , Bounded item )
+	public List<T> retrieve( Bounded item )
+	{
+		return retrieve( new ArrayList<T>() , item );
+	}
+	
+	private List<T> retrieve( List<T> returnlist , Bounded item )
 	{
 		int index = getIndex( item );
 		if( nodes[ 0 ] != null )
