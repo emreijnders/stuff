@@ -13,15 +13,15 @@ public class QuadTree<T extends Bounded>
 	
 	private int level;
 	private List<T> leaves;
-	private Bounds bounds;
+	private Bounded bounds;
 	private QuadTree[] nodes;
 	
-	public QuadTree( Bounds bounds )
+	public QuadTree( Bounded bounds )
 	{
 		this( 0 , bounds );
 	}
 	
-	private QuadTree( int level , Bounds bounds )
+	private QuadTree( int level , Bounded bounds )
 	{
 		this.level = level;
 		this.bounds = bounds;
@@ -125,7 +125,7 @@ public class QuadTree<T extends Bounded>
 		}
 	}
 	
-	public List<T> retrieve( List<T> returnlist , T item )
+	public List<T> retrieve( List<T> returnlist , Bounded item )
 	{
 		int index = getIndex( item );
 		if( nodes[ 0 ] != null )
