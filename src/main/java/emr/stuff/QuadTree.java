@@ -14,7 +14,7 @@ public class QuadTree<T extends Bounded>
 	private int level;
 	private List<T> leaves;
 	private Bounded bounds;
-	private QuadTree[] nodes;
+	private List<QuadTree<T>> nodes;
 	
 	public QuadTree( Bounded bounds )
 	{
@@ -26,20 +26,17 @@ public class QuadTree<T extends Bounded>
 		this.level = level;
 		this.bounds = bounds;
 		leaves = new ArrayList<>();
-		nodes = new QuadTree[ 4 ];
+		nodes = new ArrayList<>();
 	}
 	
 	public void clearTree()
 	{
 		leaves.clear();
-		for( int i = 0; i < nodes.length; i++ )
+		for( QuadTree<T> node : nodes )
 		{
-			if( nodes[ i ] != null )
-			{
-				nodes[ i ].clearTree();
-				nodes[ i ] = null;
-			}
+			node.clearTree();
 		}
+		nodes.clear();
 	}
 	
 	private void split()
@@ -49,10 +46,10 @@ public class QuadTree<T extends Bounded>
 		Location topleft = bounds.getTopLeft();
 		int nextlevel = level + 1;
 		
-		nodes[ 0 ] = new QuadTree<T>( nextlevel , new Bounds( new Location( topleft.X + newwidth , topleft.Y ) , newwidth , newheight ) );
-		nodes[ 1 ] = new QuadTree<T>( nextlevel , new Bounds( new Location( topleft.X , topleft.Y ) , newwidth , newheight ) );
-		nodes[ 2 ] = new QuadTree<T>( nextlevel , new Bounds( new Location( topleft.X , topleft.Y + newheight ) , newwidth , newheight ) );
-		nodes[ 3 ] = new QuadTree<T>( nextlevel , new Bounds( new Location( topleft.X + newwidth , topleft.Y + newheight ) , newwidth , newheight ) );
+		nodes.add( new QuadTree<T>( nextlevel , new Bounds( new Location( topleft.X + newwidth , topleft.Y ) , newwidth , newheight ) ) );
+		nodes.add( new QuadTree<T>( nextlevel , new Bounds( new Location( topleft.X , topleft.Y ) , newwidth , newheight ) ) );
+		nodes.add( new QuadTree<T>( nextlevel , new Bounds( new Location( topleft.X , topleft.Y + newheight ) , newwidth , newheight ) ) );
+		nodes.add( new QuadTree<T>( nextlevel , new Bounds( new Location( topleft.X + newwidth , topleft.Y + newheight ) , newwidth , newheight ) ) );
 	}
 	
 	private int getIndex( Bounded item )
@@ -92,19 +89,19 @@ public class QuadTree<T extends Bounded>
 	
 	public void insert( T item )
 	{
-		if( nodes[ 0 ] != null )
+		if( !nodes.isEmpty() )
 		{
 			int index = getIndex( item );
 			if( index != -1 )
 			{
-				nodes[ index ].insert( item );
+				nodes.get( index ).insert( item );
 				return;
 			}
 		}
 		leaves.add( item );
 		if( leaves.size() > MAX_LEAVES && level < MAX_LEVEL )
 		{
-			if( nodes[ 0 ] == null )
+			if( nodes.isEmpty() )
 			{
 				split();
 			}
@@ -115,7 +112,7 @@ public class QuadTree<T extends Bounded>
 				int index = getIndex( leaves.get( i ) );
 				if( index != -1 )
 				{
-					nodes[ index ].insert( leaves.remove( i ) );
+					nodes.get( index ).insert( leaves.remove( i ) );
 				}
 				else
 				{
@@ -133,15 +130,15 @@ public class QuadTree<T extends Bounded>
 	private List<T> retrieve( List<T> returnlist , Bounded item )
 	{
 		int index = getIndex( item );
-		if( nodes[ 0 ] != null )
+		if( !nodes.isEmpty() )
 		{
 			if( index != -1 )
 			{
-				nodes[ index ].retrieve( returnlist , item );
+				nodes.get( index ).retrieve( returnlist , item );
 			}
 			else
 			{
-				for(QuadTree<T> node : nodes )
+				for( QuadTree<T> node : nodes )
 				{
 					node.retrieve( returnlist , item );
 				}
@@ -153,12 +150,9 @@ public class QuadTree<T extends Bounded>
 	
 	public List<Bounded> getAllBoundsWithLeaves( List<Bounded> list )
 	{
-		if( nodes[ 0 ] != null )
+		for( QuadTree<T> node : nodes )
 		{
-			for( QuadTree<T> node : nodes )
-			{
-				node.getAllBoundsWithLeaves( list );
-			}
+			node.getAllBoundsWithLeaves( list );
 		}
 		if( hasLeaves() )
 		{
@@ -169,12 +163,9 @@ public class QuadTree<T extends Bounded>
 	
 	public List<T> getAllLeaves( List<T> list )
 	{
-		if( nodes[ 0 ] != null )
+		for( QuadTree<T> node : nodes )
 		{
-			for( QuadTree<T> node : nodes )
-			{
-				node.getAllLeaves( list );
-			}
+			node.getAllLeaves( list );
 		}
 		list.addAll( leaves );
 		return list;
@@ -195,7 +186,7 @@ public class QuadTree<T extends Bounded>
 	{
 		String result = " QT lvl " + level;
 		result += " bounds " + bounds.getTopLeft() + " " + bounds.getWidth() + " " + bounds.getHeight();
-		result += " has nodes: " + ( nodes[ 0 ] != null );
+		result += " has nodes: " + ( !nodes.isEmpty() );
 		result += " has leaves: " + leaves;
 		return result;
 	}
