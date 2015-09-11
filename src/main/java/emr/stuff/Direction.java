@@ -90,25 +90,25 @@ public enum Direction
 		return next;
 	}
 	
-	public static Direction getDirectionByValue( int x , int y )
+	public static Direction getDirectionByValue( double x , double y )
 	{
-		Direction dir = Direction.NO_DIRECTION; //if x or y is a bad number you just get this one
+		Direction dir = Direction.NO_DIRECTION;
 		if( x > 0 )
         {
-            if( y < 0 ) dir = Direction.NE;
-            if( y == 0 ) dir = Direction.E;
-            if( y > 0 ) dir = Direction.SE;
+            if( y < 0 ) dir = Direction.NE;            
+            else if( y > 0 ) dir = Direction.SE;
+			else dir = Direction.E;
         }
-        if( x < 0 )
+        else if( x < 0 )
         {
-            if( y < 0 ) dir = Direction.NW;
-            if( y == 0 ) dir = Direction.W;
-            if( y > 0 ) dir = Direction.SW;
+            if( y < 0 ) dir = Direction.NW;            
+            else if( y > 0 ) dir = Direction.SW;
+			else dir = Direction.W;
         }
-        if( x == 0 )
+        else
         {
             if( y < 0 ) dir = Direction.N;
-            if( y > 0 ) dir = Direction.S;
+            else if( y > 0 ) dir = Direction.S;
         }
 		return dir;
 	}
