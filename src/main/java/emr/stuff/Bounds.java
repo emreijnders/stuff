@@ -6,19 +6,19 @@ public class Bounds extends Rectangle2D.Double implements Bounded
 {
 	public Bounds( Location loc , double w , double h )
 	{
-		super( loc.X , loc.Y , w , h );		
+		super( loc.getX() , loc.getY() , w , h );		
 	}
 	
 	@Override
 	public Location getTopLeft()
 	{
-		return new Location( (int) getX() , (int) getY() );
+		return new Location( getX() , getY() );
 	}
 	
 	@Override
-	public boolean intersects( Bounded other )
+	public Rectangle2D getBoundingRectangle()
 	{
-		return intersects( other.getTopLeft().X , other.getTopLeft().Y , other.getWidth() , other.getHeight() );
+		return this;
 	}
 	
 	@Override
