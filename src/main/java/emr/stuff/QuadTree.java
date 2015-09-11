@@ -46,22 +46,22 @@ public class QuadTree<T extends Bounded>
 		Location topleft = bounds.getTopLeft();
 		int nextlevel = level + 1;
 		
-		nodes.add( new QuadTree<T>( nextlevel , new Bounds( new Location( topleft.X + newwidth , topleft.Y ) , newwidth , newheight ) ) );
-		nodes.add( new QuadTree<T>( nextlevel , new Bounds( new Location( topleft.X , topleft.Y ) , newwidth , newheight ) ) );
-		nodes.add( new QuadTree<T>( nextlevel , new Bounds( new Location( topleft.X , topleft.Y + newheight ) , newwidth , newheight ) ) );
-		nodes.add( new QuadTree<T>( nextlevel , new Bounds( new Location( topleft.X + newwidth , topleft.Y + newheight ) , newwidth , newheight ) ) );
+		nodes.add( new QuadTree<T>( nextlevel , new Bounds( new Location( topleft.getX() + newwidth , topleft.getY() ) , newwidth , newheight ) ) );
+		nodes.add( new QuadTree<T>( nextlevel , new Bounds( new Location( topleft.getX() , topleft.getY() ) , newwidth , newheight ) ) );
+		nodes.add( new QuadTree<T>( nextlevel , new Bounds( new Location( topleft.getX() , topleft.getY() + newheight ) , newwidth , newheight ) ) );
+		nodes.add( new QuadTree<T>( nextlevel , new Bounds( new Location( topleft.getX() + newwidth , topleft.getY() + newheight ) , newwidth , newheight ) ) );
 	}
 	
 	private int getIndex( Bounded item )
 	{
 		int index = -1;
-		int hmiddle = bounds.getTopLeft().X + ( (int) ( bounds.getWidth() / 2.0 ) );
-		int vmiddle = bounds.getTopLeft().Y + ( (int) ( bounds.getHeight() / 2.0 ) );
+		double hmiddle = bounds.getTopLeft().getX() + ( bounds.getWidth() / 2.0 );
+		double vmiddle = bounds.getTopLeft().getY() + ( bounds.getHeight() / 2.0 );
 		
-		boolean top = item.getTopLeft().Y < vmiddle && item.getTopLeft().Y + item.getHeight() <= vmiddle;
-		boolean bottom = item.getTopLeft().Y >= vmiddle;
-		boolean left = item.getTopLeft().X < hmiddle && item.getTopLeft().X + item.getWidth() <= hmiddle;
-		boolean right = item.getTopLeft().X >= hmiddle;
+		boolean top = item.getTopLeft().getY() < vmiddle && item.getTopLeft().getY() + item.getHeight() <= vmiddle;
+		boolean bottom = item.getTopLeft().getY() >= vmiddle;
+		boolean left = item.getTopLeft().getX() < hmiddle && item.getTopLeft().getX() + item.getWidth() <= hmiddle;
+		boolean right = item.getTopLeft().getX() >= hmiddle;
 		if( top )
 		{
 			if( left )
@@ -122,25 +122,25 @@ public class QuadTree<T extends Bounded>
 		}
 	}
 	
-	public List<T> retrieve( Bounded item )
+	public List<T> retrieve( Bounded area )
 	{
-		return retrieve( new ArrayList<T>() , item );
+		return retrieve( new ArrayList<T>() , area );
 	}
 	
-	private List<T> retrieve( List<T> returnlist , Bounded item )
+	private List<T> retrieve( List<T> returnlist , Bounded area )
 	{
-		int index = getIndex( item );
+		int index = getIndex( area );
 		if( !nodes.isEmpty() )
 		{
 			if( index != -1 )
 			{
-				nodes.get( index ).retrieve( returnlist , item );
+				nodes.get( index ).retrieve( returnlist , area );
 			}
 			else
 			{
 				for( QuadTree<T> node : nodes )
 				{
-					node.retrieve( returnlist , item );
+					node.retrieve( returnlist , area );
 				}
 			}
 		}
@@ -148,6 +148,7 @@ public class QuadTree<T extends Bounded>
 		return returnlist;
 	}
 	
+	/*
 	public List<Bounded> getAllBoundsWithLeaves( List<Bounded> list )
 	{
 		for( QuadTree<T> node : nodes )
@@ -160,6 +161,7 @@ public class QuadTree<T extends Bounded>
 		}
 		return list;
 	}
+	*/
 	
 	public List<T> getAllLeaves( List<T> list )
 	{
