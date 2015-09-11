@@ -2,31 +2,35 @@ package emr.stuff;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.awt.geom.Point2D;
+import java.awt.geom.Rectangle2D;
 
-public class Location implements Comparable<Location>, Bounded
+public class Location extends Point2D.Double implements Comparable<Location>, Bounded
 {
-	public final int X, Y;
+	private final int width , height;
 	
-	public Location( int x , int y )
+	public Location( double x , double y )
 	{
-		X = x;
-		Y = y;
+		super( x , y );
+		width = 1;
+		height = 1;
 	}
 	
 	public Direction getRelativeDirection( Location other )
 	{
-		double xdif = other.X - X;
-		double ydif = other.Y - Y;
-		int xdir = (int) ( xdif / Math.abs( xdif ) );
-		int ydir = (int) ( ydif / Math.abs( ydif ) );
+		double xdif = other.getX() - getX();
+		double ydif = other.getY() - getY();
+		double xdir = xdif / Math.abs( xdif );
+		double ydir = ydif / Math.abs( ydif );
 		return Direction.getDirectionByValue( xdir , ydir );
 	}
 	
-	public Location getNewLocation( Direction dir )
+	public Location getNextLocation( Direction dir )
 	{
-		return new Location( X + dir.X , Y + dir.Y );
+		return new Location( getX() + dir.X , getY() + dir.Y );
 	}
 	
+	/*
 	public List<Location> getNeighbours()
 	{
 		return getNeighbours( 1 );
@@ -39,9 +43,9 @@ public class Location implements Comparable<Location>, Bounded
 		if( distance > 0 )
 		{
 			//this method does NOT check the validity of the locations returned! do that yourself			
-			for(int y=Y-distance;y<=Y+distance;y++)
+			for( int y = getY() - distance; y <= getY() + distance; y++ )
 			{
-				for(int x=X-distance;x<=X+distance;x++)
+				for( int x = getX() - distance; x <= getX() + distance; x++ )
 				{
 					if( x == 0 && y == 0 ) continue; //the original location
 					result.add( new Location( x , y ) );
@@ -50,6 +54,7 @@ public class Location implements Comparable<Location>, Bounded
 		}
 		return result;
 	}
+	*/
 	
 	@Override
 	public Location getTopLeft()
@@ -60,38 +65,30 @@ public class Location implements Comparable<Location>, Bounded
 	@Override
 	public double getWidth()
 	{
-		return 1;
+		return width;
 	}
 	
 	@Override
 	public double getHeight()
 	{
-		return 1;
+		return height;
 	}
 	
 	@Override
-	public boolean intersects( Bounded other )
+	public Rectangle2D getBoundingRectangle()
 	{
-		boolean answer = false;
-		if( X >= other.getTopLeft().X 
-			&& X < other.getTopLeft().X + other.getWidth() 
-			&& Y >= other.getTopLeft().Y
-			&& Y < other.getTopLeft().Y + other.getHeight() )
-		{
-			answer = true;
-		}
-		return answer;
+		return new Rectangle2D.Double( getX() , getY() , width , height );
 	}
 	
 	@Override
 	public int compareTo( Location other )
 	{
 		int answer = 1;
-		if( X == other.X && Y == other.Y )
+		if( getX() == other.getX() && getY() == other.getY() )
 		{
 			answer = 0;
 		}
-		else if( Y < other.Y || ( Y == other.Y && X < other.X ) )
+		else if( getY() < other.getY() || ( getY() == other.getY() && getX() < other.getX() ) )
 		{
 			answer = -1;
 		}
@@ -111,7 +108,7 @@ public class Location implements Comparable<Location>, Bounded
 			else if( o instanceof Location )
 			{
 				Location other = (Location) o;
-				if( other.X == this.X && other.Y == this.Y )
+				if( other.getX() == getX() && other.getY() == getY() )
 				{
 					result = true;
 				}
@@ -121,17 +118,8 @@ public class Location implements Comparable<Location>, Bounded
 	}
 	
 	@Override
-	public int hashCode()
-	{
-		int result = 13;
-		result = 23 * result + X;
-		result = 23 * result + Y;
-		return result;
-	}
-	
-	@Override
 	public String toString()
 	{
-		return "(" + X + "," + Y + ")";
+		return "(" + getX() + "," + getY() + ")";
 	}
 }
