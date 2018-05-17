@@ -1,30 +1,22 @@
 package emr.stuff;
 
-//import java.util.ArrayList;
-//import java.util.List;
+import java.util.ArrayList;
+import java.util.List;
+import java.awt.geom.Point2D;
+import java.awt.geom.Rectangle2D;
 
-public class Location implements Comparable<Location>
+public class LocationDouble extends Point2D.Double implements Comparable<LocationDouble>, Bounded
 {
-	private final int X;
-	private final int Y;
+	private final int width , height;
 	
-	public Location( int x , int y )
+	public LocationDouble( double x , double y )
 	{
-		X = x;
-		Y = y;
+		super( x , y );
+		width = 1;
+		height = 1;
 	}
 	
-	public int getX()
-	{
-		return X;
-	}
-	
-	public int getY()
-	{
-		return Y;
-	}
-	
-	public Direction getRelativeDirection( Location other )
+	public Direction getRelativeDirection( LocationDouble other )
 	{
 		double xdif = other.getX() - getX();
 		double ydif = other.getY() - getY();
@@ -33,9 +25,9 @@ public class Location implements Comparable<Location>
 		return Direction.getDirectionByValue( xdir , ydir );
 	}
 	
-	public Location getNextLocation( Direction dir )
+	public LocationDouble getNextLocation( Direction dir )
 	{
-		return new Location( getX() + dir.X , getY() + dir.Y );
+		return new LocationDouble( getX() + dir.X , getY() + dir.Y );
 	}
 	
 	/*
@@ -65,7 +57,31 @@ public class Location implements Comparable<Location>
 	*/
 	
 	@Override
-	public int compareTo( Location other )
+	public LocationDouble getTopLeft()
+	{
+		return this;
+	}
+	
+	@Override
+	public double getWidth()
+	{
+		return width;
+	}
+	
+	@Override
+	public double getHeight()
+	{
+		return height;
+	}
+	
+	@Override
+	public Rectangle2D getBoundingRectangle()
+	{
+		return new Rectangle2D.Double( getX() , getY() , width , height );
+	}
+	
+	@Override
+	public int compareTo( LocationDouble other )
 	{
 		int answer = 1;
 		if( getX() == other.getX() && getY() == other.getY() )
@@ -89,9 +105,9 @@ public class Location implements Comparable<Location>
 			{
 				result = true;
 			}
-			else if( o instanceof Location )
+			else if( o instanceof LocationDouble )
 			{
-				Location other = (Location) o;
+				LocationDouble other = (LocationDouble) o;
 				if( other.getX() == getX() && other.getY() == getY() )
 				{
 					result = true;
@@ -99,15 +115,6 @@ public class Location implements Comparable<Location>
 			}
 		}		
 		return result;
-	}
-	
-	@Override
-	public int hashCode()
-	{
-		int hash = 13;
-		hash = ( hash * 23 ) + getX();
-		hash = ( hash * 23 ) + getY();
-		return hash;
 	}
 	
 	@Override

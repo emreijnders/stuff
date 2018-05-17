@@ -2,7 +2,7 @@ package emr.stuff;
 
 import java.util.List;
 import java.util.ArrayList;
-import emr.stuff.Location;
+import emr.stuff.LocationDouble;
 import emr.stuff.Bounds;
 import emr.stuff.Bounded;
 
@@ -43,13 +43,13 @@ public class QuadTree<T extends Bounded>
 	{
 		int newwidth = (int) ( bounds.getWidth() / 2.0 );
 		int newheight = (int) ( bounds.getHeight() / 2.0 );
-		Location topleft = bounds.getTopLeft();
+		LocationDouble topleft = bounds.getTopLeft();
 		int nextlevel = level + 1;
 		
-		nodes.add( new QuadTree<T>( nextlevel , new Bounds( new Location( topleft.getX() + newwidth , topleft.getY() ) , newwidth , newheight ) ) );
-		nodes.add( new QuadTree<T>( nextlevel , new Bounds( new Location( topleft.getX() , topleft.getY() ) , newwidth , newheight ) ) );
-		nodes.add( new QuadTree<T>( nextlevel , new Bounds( new Location( topleft.getX() , topleft.getY() + newheight ) , newwidth , newheight ) ) );
-		nodes.add( new QuadTree<T>( nextlevel , new Bounds( new Location( topleft.getX() + newwidth , topleft.getY() + newheight ) , newwidth , newheight ) ) );
+		nodes.add( new QuadTree<T>( nextlevel , new Bounds( new LocationDouble( topleft.getX() + newwidth , topleft.getY() ) , newwidth , newheight ) ) );
+		nodes.add( new QuadTree<T>( nextlevel , new Bounds( new LocationDouble( topleft.getX() , topleft.getY() ) , newwidth , newheight ) ) );
+		nodes.add( new QuadTree<T>( nextlevel , new Bounds( new LocationDouble( topleft.getX() , topleft.getY() + newheight ) , newwidth , newheight ) ) );
+		nodes.add( new QuadTree<T>( nextlevel , new Bounds( new LocationDouble( topleft.getX() + newwidth , topleft.getY() + newheight ) , newwidth , newheight ) ) );
 	}
 	
 	private int getIndex( Bounded item )

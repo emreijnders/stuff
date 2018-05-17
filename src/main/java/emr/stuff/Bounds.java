@@ -4,15 +4,15 @@ import java.awt.geom.Rectangle2D;
 
 public class Bounds extends Rectangle2D.Double implements Bounded
 {
-	public Bounds( Location loc , double w , double h )
+	public Bounds( LocationDouble loc , double w , double h )
 	{
 		super( loc.getX() , loc.getY() , w , h );		
 	}
 	
 	@Override
-	public Location getTopLeft()
+	public LocationDouble getTopLeft()
 	{
-		return new Location( getX() , getY() );
+		return new LocationDouble( getX() , getY() );
 	}
 	
 	@Override

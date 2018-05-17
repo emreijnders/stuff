@@ -54,6 +54,11 @@ public class Setting implements Comparable<Setting>
 		return (T) answer;
 	}
 	
+	public String getValueString()
+	{
+		return VALUE;
+	}
+	
 	@Override
 	public int hashCode()
 	{
